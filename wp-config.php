@@ -1,17 +1,20 @@
 <?php
 /**
- * The base configuration for WordPress
+ * The base configuration for WordPress – Render-ready version
  */
 
-// ** Database settings ** //
-define( 'DB_NAME', 'local' );
-define( 'DB_USER', 'root' );
-define( 'DB_PASSWORD', 'root' );
-define( 'DB_HOST', 'localhost' );
+// ** Database settings - pulled from environment variables for security ** //
+define( 'DB_NAME', getenv('DB_NAME') ?: 'wordpress' );
+define( 'DB_USER', getenv('DB_USER') ?: 'wordpress' );
+define( 'DB_PASSWORD', getenv('DB_PASSWORD') ?: 'password' );
+define( 'DB_HOST', getenv('DB_HOST') ?: 'localhost' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 
-// ** Authentication Unique Keys and Salts ** //
+/**#@+
+ * Authentication unique keys and salts.
+ * You can generate new ones here: https://api.wordpress.org/secret-key/1.1/salt/
+ */
 define( 'AUTH_KEY',          'I*[#2Dv-s G;]:bLBoW&7L1jvr$2xBno;:>.h:f2&GaqV.5z{`<LQvH,Z..?um`Q' );
 define( 'SECURE_AUTH_KEY',   'epkTA1lJ,kCa%f^FLvK0c;Aqwdj?h4:~bJ7_+=&+?=][O 1V=1S}$tchdoec,dL@' );
 define( 'LOGGED_IN_KEY',     ' J~Fq (Sk`h@>(%9YNxgAbQC.NWV]^IRd;w?h=XRS*!;1.~<: f72#<4rqiQK05r' );
@@ -21,27 +24,34 @@ define( 'SECURE_AUTH_SALT',  ':Xq@p?!Kh_jS+y_egTSEaPCWW<{.Gz7wO4n)l+ZFV)17+}AeW>
 define( 'LOGGED_IN_SALT',    '`zbgAmREiAk39<A)&~FSw7&bl-Xr-sSyqLsN0NfdF/eUt@^W.6GO`[jkr*h`4I)>' );
 define( 'NONCE_SALT',        'A>U(IVYxVrKX.@J,N *T|gH 86d}?#-#E+S*?CJ<^q]J85/E^C0i1gM=YBhlY>VH' );
 define( 'WP_CACHE_KEY_SALT', '#*B?Qwi?EYK;1-Mm`9xn2z6OFD}/D:`tPE}S_:@vhq`32,149gRjBv*4/6`EH*f]' );
+/**#@-*/
 
+// Table prefix
 $table_prefix = 'wp_';
 
-// ** Debugging mode ** //
-if ( ! defined( 'WP_DEBUG' ) ) {
-    define( 'WP_DEBUG', false );
+/** Environment and debugging **/
+define( 'WP_ENVIRONMENT_TYPE', getenv('WP_ENVIRONMENT_TYPE') ?: 'production' );
+define( 'WP_DEBUG', getenv('WP_DEBUG') ?: false );
+
+/** Set the site URLs (important for Render or Vercel frontend integrations) **/
+if ( getenv('WP_HOME') ) {
+    define( 'WP_HOME', getenv('WP_HOME') );
+}
+if ( getenv('WP_SITEURL') ) {
+    define( 'WP_SITEURL', getenv('WP_SITEURL') );
 }
 
-define( 'WP_ENVIRONMENT_TYPE', 'local' );
-
-// ** PHP upload limits ** //
+/** Increase upload and memory limits **/
 @ini_set( 'upload_max_filesize', '128M' );
 @ini_set( 'post_max_size', '128M' );
 @ini_set( 'memory_limit', '256M' );
 @ini_set( 'max_execution_time', '300' );
 @ini_set( 'max_input_time', '300' );
 
-// ** Absolute path to the WordPress directory ** //
+/** Absolute path to the WordPress directory **/
 if ( ! defined( 'ABSPATH' ) ) {
     define( 'ABSPATH', __DIR__ . '/' );
 }
 
-// ** Sets up WordPress vars and included files ** //
+/** Sets up WordPress vars and included files **/
 require_once ABSPATH . 'wp-settings.php';
